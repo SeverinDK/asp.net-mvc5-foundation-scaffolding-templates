@@ -12,6 +12,7 @@ if(IsPartialView) {
 #>
 
 @{
+    ViewBag.Title = "<#= ViewName#>";
 <#
 if (!String.IsNullOrEmpty(LayoutPageFile)) {
 #>
@@ -20,6 +21,8 @@ if (!String.IsNullOrEmpty(LayoutPageFile)) {
 }
 #>
 }
+
+<h2><#= ViewName#></h2>
 
 <#
 } else {
@@ -41,7 +44,6 @@ if (!String.IsNullOrEmpty(LayoutPageFile)) {
     PushIndent("    ");
 }
 #>
-
 <h3>Are you sure you want to delete this?</h3>
 <div>
     <h4><#= ViewDataTypeShortName #></h4>
@@ -52,7 +54,8 @@ foreach (PropertyMetadata property in ModelMetadata.Properties) {
     if (property.Scaffold && !property.IsPrimaryKey && !property.IsForeignKey) {
 #>
 <#
-        // This is a temporary work around until core scaffolding provides support for independent associations.
+        // We do not want to show any association properties for which there is
+        // no associated foreign key.
         if (property.IsAssociation && GetRelatedModelMetadata(property) == null) {
             continue;
         }
